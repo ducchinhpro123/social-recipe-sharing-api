@@ -16,8 +16,8 @@ const recipe = new Schema({
   title: String,
   description: String,
   images: [String],
-  prepTime: Number,
-  cookTime: Number,
+  //prepTime: Number,
+  //cookTime: Number,
   difficulty: String,
   ingredients: [{
     name: String,
