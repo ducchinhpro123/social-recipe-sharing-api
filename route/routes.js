@@ -3,17 +3,16 @@
 //POST /api/auth/register
 //POST /api/auth/login
 //```
-import express from 'express';
-import { login, register, findUserById } from '../controller/userController.js';
-import {getAllRecipes, getRecipeById, saveRecipe} from '../controller/recipeController.js';
+import express          from "express";
+import UserController   from "../controller/userController.js";
+import RecipeController from "../controller/recipeController.js";
 
 export const router = express.Router();
 
 /*      ------ Authentication and user query ------       */
-router.post('/api/auth/login', login);
-router.post('/api/auth/register', register);
-router.post('/api/users/:id', findUserById);
-
+router.post("/api/auth/login",    UserController.login);
+router.post("/api/auth/register", UserController.register);
+router.post("/api/users/:id",     UserController.findUserById);
 
 //POST /api/users/follow/:id
 //DELETE /api/users/unfollow/:id
@@ -26,11 +25,10 @@ router.post('/api/users/:id', findUserById);
 //POST /api/recipes
 //GET /api/recipes
 
-
 /*      ------ RECIPE ------       */
-router.post("/api/recipes/", saveRecipe);
-router.get("/api/recipes", getAllRecipes);
-router.get("/api/recipes/:id", getRecipeById);
+router.post("/api/recipes/",   RecipeController.saveRecipe);
+router.get("/api/recipes",     RecipeController.getAllRecipes);
+router.get("/api/recipes/:id", RecipeController.getRecipeById);
 
 //PUT /api/recipes/:id
 //DELETE /api/recipes/:id
