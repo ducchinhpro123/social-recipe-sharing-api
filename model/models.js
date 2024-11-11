@@ -15,6 +15,7 @@ const recipe = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'user' },
   title: String,
   description: String,
+  instructions: [String],
   images: [String],
   prepTime: Number,
   cookTime: Number,
