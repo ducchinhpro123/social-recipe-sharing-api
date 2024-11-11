@@ -12,7 +12,8 @@ export const router = express.Router();
 /*      ------ Authentication and user query ------       */
 router.post("/api/auth/login",    UserController.login);
 router.post("/api/auth/register", UserController.register);
-router.post("/api/users/:id",     UserController.findUserById);
+router.get("/api/users/:id",      UserController.findUserById);
+router.get("/api/users/",         UserController.getAllUsers);
 
 //POST /api/users/follow/:id
 //DELETE /api/users/unfollow/:id
