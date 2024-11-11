@@ -1,5 +1,7 @@
 import { User } from "../model/models.js";
 
+import {inspect} from "util";
+
 class UserController {
   static async getAllUsers(req, res) {
     const users = await User.find();
@@ -40,7 +42,6 @@ class UserController {
   static async findUserById(req, res) {
     const id = req.params.id;
     try {
-      const user = User.findById(id);
       const user = await User.findById(id);
       if (user) {
         res.status(200).json(user);
