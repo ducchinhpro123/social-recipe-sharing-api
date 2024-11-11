@@ -36,6 +36,7 @@ class UserController {
     const id = req.params.id;
     try {
       const user = User.findById(id);
+      const user = await User.findById(id);
       if (user) {
         res.status(200).json(user);
       } else {
