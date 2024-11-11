@@ -1,6 +1,11 @@
 import { User } from "../model/models.js";
 
 class UserController {
+  static async getAllUsers(req, res) {
+    const users = await User.find();
+    res.status(200).json(users);
+  }
+
   static async login(req, res) {
     try {
       const { username, password } = req.body;
