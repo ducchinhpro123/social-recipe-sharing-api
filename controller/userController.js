@@ -7,10 +7,27 @@ import jwt from 'jsonwebtoken';
 
 class UserController {
 
+  static async isContainsRecipe(req, res) {
+    const { username, recipeId } = req.body;
+    try {
+      const user = await User.findOne({username});
+      if (user) {
+        if (user.favorites.includes(recipeId)) {
+          return res.status(200).json({message: "Recipe found in favorite"});
+        } else {
+          return res.status(200).json({message: "Recipe not found in favorite"});
+        }
+      } else {
+        return res.status(404).json({message: "User not found"});
+      }
+    } catch (error) {
+      res.status(500).json({mesasge: error});
+    }
+  }
+
   static async saveFavorites(req, res) {
     // favorites: [{ type: Schema.Types.ObjectId, ref: 'Recipe'}],
     const { username, recipeId } = req.body;
-
     try {
       const recipe = await Recipe.findById(recipeId);
       const user = await User.findOne({username});
