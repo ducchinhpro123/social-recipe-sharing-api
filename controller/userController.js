@@ -19,11 +19,13 @@ class UserController {
         const isFavorite = user.favorites.includes(recipeId);
         if (isFavorite) {
           user.favorites.pull(recipeId);
+          await user.save();
+          return res.status(200).json({message: "You pulled a recipe from your favorites recipe list."});
         } else {
           user.favorites.push(recipeId);
+          await user.save();
+          return res.status(200).json({message: "You added a new recipe to your favorites recipe list."});
         }
-        await user.save();
-        return res.status(200).json({message: "You added a new recipe to your favorites recipe list."});
       } else {
         return res.status(404).json({message: "You missed recipe id or username"});
       }
