@@ -5,10 +5,11 @@ const user = new Schema({
   password: String,
   profileImage: String,
   bio: String,
+  favorites: [{ type: Schema.Types.ObjectId, ref: 'Recipe'}],
+  createdAt: { type: Date, default: Date.now }
   //followers: [ObjectId],
   //following: [ObjectId],
   //savedRecipes: [ObjectId],
-  createdAt: { type: Date, default: Date.now }
 });
 
 const recipe = new Schema({
@@ -26,19 +27,19 @@ const recipe = new Schema({
     unit: String
   }],
   category: [String],
-  //ratings: [{
+  createdAt: { type: Date, default: Date.now }
+  // ratings: [{
   //  userId: ObjectId,
-  //  rating: Number,
+  //  isFavorite: Boolean,
   //  review: String,
-  //  date: Date
-  //}],
-  //likes: [ObjectId],
+  //  // date: Date
+  // }],
+  // likes: Number,
   //comments: [{
   //  userId: ObjectId,
   //  text: String,
   //  date: Date
   //}],
-  createdAt: { type: Date, default: Date.now }
 });
 
 export const User = mongoose.model('User', user);
