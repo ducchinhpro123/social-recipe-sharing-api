@@ -10,10 +10,11 @@ import RecipeController from "../controller/recipeController.js";
 export const router = express.Router();
 
 /*      ------ Authentication and user query ------       */
-router.post("/api/auth/login",    UserController.login);
-router.post("/api/auth/register", UserController.register);
-router.get("/api/users/:id",      UserController.findUserById);
-router.get("/api/users/",         UserController.getAllUsers);
+router.post("/api/auth/login",      UserController.login);
+router.post("/api/auth/register",   UserController.register);
+router.get("/api/users/:id",        UserController.findUserById);
+router.get("/api/users/",           UserController.getAllUsers);
+router.post("/api/users/favorites", UserController.saveFavorites);
 
 //POST /api/users/follow/:id
 //DELETE /api/users/unfollow/:id
