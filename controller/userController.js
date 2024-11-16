@@ -17,21 +17,17 @@ class UserController {
 
       const user = await User.findOne({ username });
 
-      // if (user.password !== password) {
-      //   return res.status(400).json({message: "Invalid username or password"});
-      // }
       if (!user) {
         return res.status(401).json({message: "User not found."});
       }
 
       const isValidPass = await bcrypt.compare(password, user.password);
-      console.log(`is valid password? ${isValidPass}`)
 
       if (user && isValidPass) {
-        const token = jwt.sign({id: user._id}, "159d86da542f791a23cca61d76ae244c0464fbb594212e2332fb5946b23a18fd", 
+        const token = jwt.sign({id: user._id}, "159d86da542f791a23cca61d76ae243c0464fbb594212e2332fb5946b23a18fd", 
           {expiresIn: "1h"});
 
-        return res.status(200).json({ message: "Login successful", token });
+        return res.status(200).json({ message: "Login successful", token, user });
       } else {
         return res.status(401).json({ message: "Invalid username or password" });
       }
