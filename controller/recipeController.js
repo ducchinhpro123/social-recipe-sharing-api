@@ -11,7 +11,7 @@ class RecipeController {
       category: category,
     });
     try {
-      newRecipe.save();
+      await newRecipe.save();
       const savedRecipe = await newRecipe.save();
       res.status(201).json(savedRecipe);
     } catch (error) {
