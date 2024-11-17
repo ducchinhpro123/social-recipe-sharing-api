@@ -6,6 +6,38 @@ import bcrypt           from 'bcrypt';
 // import jwt              from 'jsonwebtoken';
 
 class AdminController {
+
+  static async addNewRecipeRequest(req, res) {
+
+    const userId = req.session.user._id; // Admin
+
+    const { title, description, ingredients, category, prepTime, difficulty, cookTime, images, instructions} = req.body;
+
+    const newRecipe = new Recipe({
+      userId: userId,
+      title: title,
+      description: description,
+      ingredients: JSON.parse(ingredients),
+      category: category,
+      prepTime: prepTime,
+      difficulty: difficulty,
+      cookTime: cookTime,
+      images: images,
+      instructions: instructions,
+    });
+
+    try {
+      await newRecipe.save();
+      res.redirect('/admin/home');
+    } catch (error) {
+        res.render('error', {'message': error});
+    }
+  }
+
+  static async addNewRecipe(req, res) {
+    res.render('add_new_recipe');
+  }
+
   static async loginRequest(req, res) {
     const { username, password } = req.body;
     try {
@@ -50,7 +82,7 @@ class AdminController {
   }
 
   static async updateRecipePost(req, res) {
-    const {_id, title, description, instructions, prepTime, ingredients, category, cookTime, difficulty} = req.body;
+    const {_id, title, description, instructions, prepTime, ingredients, category, cookTime, difficulty, images} = req.body;
     try {
       const recipe = await Recipe.findById(_id);
       if (recipe) {
@@ -61,12 +93,13 @@ class AdminController {
         if (cookTime)     recipe.cookTime     = cookTime;
         if (category)     recipe.category     = category;
         if (difficulty)   recipe.difficulty   = difficulty;
+        if (images)       recipe.images       = images;
 
         if (ingredients) {
           try {
             recipe.ingredients = JSON.parse(ingredients);
           } catch (error) {
-            return res.status(400).json({message: "Invalid ingredients format"});
+              res.render('error', {'message': error});
           }
         }
 
