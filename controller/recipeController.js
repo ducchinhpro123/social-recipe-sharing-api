@@ -30,6 +30,15 @@ class RecipeController {
     }
   }
 
+  static async getRecipeByIdWithoutReq(id) {
+      const recipe = await Recipe.findById(id);
+      if (recipe) {
+        return recipe;
+      } else {
+        return null;
+      }
+  }
+
   static async getRecipeById(req, res) {
     const id = req.params.id;
     try {

@@ -1,5 +1,6 @@
-import { User } from "../model/models.js";
-import { Recipe } from "../model/models.js";
+import { User }             from "../model/models.js";
+import { Recipe }           from "../model/models.js";
+import RecipeController     from "../controller/recipeController.js";
 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -51,7 +52,7 @@ class UserController {
     }
   }
 
-  static async getAllUsers(req, res) {
+  static async getAllUsers(_req, res) {
     const users = await User.find();
     res.status(200).json(users);
   }
@@ -81,21 +82,42 @@ class UserController {
     }
   }
 
+  static async favorites(req, res) {
+      const {username} = req.body;
+      const userExists = await User.findOne({username});
+      if (userExists) {
+        const favoritesListNums = userExists.favorites.length;
+        let recipes = [];
+        if (favoritesListNums > 0) {
+          for (let recipeId of userExists.favorites) {
+             let recipe = await RecipeController.getRecipeByIdWithoutReq(recipeId);
+             if (recipe != null) {
+               recipes.push(recipe);
+             }
+          }
+        }
+        return res.status(200).json({favoritesNums: favoritesListNums, recipes: recipes});
+      } else {
+        return res.status(404).json({message: "User not found"});
+      }
+  }
+
   static async register(req, res) {
     try {
       const { username, password } = req.body;
       const userExists = await User.findOne({username});
+
       if (userExists) {
-        res.status(409).json({message: "User with username " + username + " already exists."});
+        return res.status(409).json({message: "User with username " + username + " already exists."});
       }
       const encryptedPass = await bcrypt.hash(password, 10);
 
-      const newUser = new User({ username, password: encryptedPass });
+      const newUser = new User({ username, password: encryptedPass, profileImage: "" });
       await newUser.save();
 
-      res.status(201).json({ message: "User registered successfully", user: newUser });
+      return res.status(201).json({ message: "User registered successfully", user: newUser });
     } catch (error) {
-      res
+      return res
         .status(500)
         .json({ message: "Error while registering new user", error });
     }
