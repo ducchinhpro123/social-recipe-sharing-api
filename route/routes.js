@@ -19,6 +19,8 @@ router.post("/api/users/is-contains-favorites", UserController.isContainsRecipe)
 router.post("/api/users/get-favorites",         UserController.favorites);
 router.post("/api/users/get-favorites-length",  UserController.getFavoritesLength);
 
+
+
 //POST /api/users/follow/:id
 //DELETE /api/users/unfollow/:id
 //GET /api/users/:id/followers
@@ -30,10 +32,13 @@ router.post("/api/users/get-favorites-length",  UserController.getFavoritesLengt
 //POST /api/recipes
 //GET /api/recipes
 
-/*      ------ RECIPE ------       */
-router.post("/api/recipes/",   RecipeController.saveRecipe);
-router.get("/api/recipes",     RecipeController.getAllRecipes);
-router.get("/api/recipes/:id", RecipeController.getRecipeById);
+/*                      ------ RECIPE ------                    */
+router.post("/api/recipes/",          RecipeController.saveRecipe);
+router.get("/api/recipes",            RecipeController.getAllRecipes);
+router.get("/api/recipes/:id",        RecipeController.getRecipeById);
+router.get("/api/recipes/delete/:id", RecipeController.deleteRecipe);
+router.post("/api/recipes/update/",   RecipeController.updateRecipe);
+
 
 //PUT /api/recipes/:id
 //DELETE /api/recipes/:id
