@@ -28,18 +28,6 @@ const recipe = new Schema({
   }],
   category: [String],
   createdAt: { type: Date, default: Date.now }
-  // ratings: [{
-  //  userId: ObjectId,
-  //  isFavorite: Boolean,
-  //  review: String,
-  //  // date: Date
-  // }],
-  // likes: Number,
-  //comments: [{
-  //  userId: ObjectId,
-  //  text: String,
-  //  date: Date
-  //}],
 });
 
 export const User = mongoose.model('User', user);
