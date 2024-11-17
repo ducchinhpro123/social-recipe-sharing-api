@@ -66,7 +66,7 @@
                             <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
                                                                        aria-expanded="false" data-bs-toggle="dropdown"
                                                                        href="#"><span
-                                            class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span><img
+                                            class="d-none d-lg-inline me-2 text-gray-600 small">Admin</span><img
                                             class="border rounded-circle img-profile"
                                             src="/assets/img/avatars/avatar1.jpeg"></a>
                                 <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
@@ -93,11 +93,10 @@
                         <!-- Recipe ID -->
                         <div class="mb-3">
                             <label for="recipe-id" class="form-label">Recipe ID</label>
-                            <input type="text" class="form-control" id="_id" name="_id" value="<%= recipe._id %>"
+                            <input type="text" class="form-control" id="_id" name="_id"  value="<%= recipe._id %>"
                                    readonly>
                         </div>
 
-                        <!-- Title -->
                         <div class="mb-3">
                             <label for="recipe-title" class="form-label">Title</label>
                             <input type="text" class="form-control" id="recipe-title" name="title" value="<%= recipe.title %>"
@@ -162,6 +161,11 @@
                                    value="<%= recipe.category.join(', ') %>"
                                    placeholder="Enter Categories (comma-separated)">
                         </div>
+
+                        <div class="mb-3">
+                            <label for="recipe-images" class="form-label">Image URL</label>
+                            <input type="text" class="form-control" id="recipe-images" name="images" value="<%= recipe.images[0] %>"
+                                   placeholder="Enter Title">
 
                         <button id="update-button" class="btn btn-primary" type="submit">Update Recipe</button>
                     </form>
