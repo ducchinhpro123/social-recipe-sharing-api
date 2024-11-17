@@ -7,7 +7,16 @@ import jwt from 'jsonwebtoken';
 
 
 class UserController {
-
+  static async getFavoritesLength(req, res) {
+    const {username} = req.body;
+    const userExists = await User.findOne({username});
+    if (userExists) {
+      const favoritesListNums = userExists.favorites.length;
+      return res.status(200).json({favoritesNums: favoritesListNums});
+    } else {
+      return res.status(404).json({message: "User not found"});
+    }
+  }
   static async isContainsRecipe(req, res) {
     const { username, recipeId } = req.body;
     try {

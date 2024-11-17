@@ -17,6 +17,7 @@ router.get("/api/users/",                       UserController.getAllUsers);
 router.post("/api/users/favorites",             UserController.saveFavorites);
 router.post("/api/users/is-contains-favorites", UserController.isContainsRecipe);
 router.post("/api/users/get-favorites",         UserController.favorites);
+router.post("/api/users/get-favorites-length",  UserController.getFavoritesLength);
 
 //POST /api/users/follow/:id
 //DELETE /api/users/unfollow/:id
