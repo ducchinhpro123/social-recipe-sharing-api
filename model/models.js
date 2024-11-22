@@ -1,5 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
+const admin = new Schema({
+  username: String,
+  password: String,
+  profileImage: String,
+  bio: String,
+  createdAt: { type: Date, default: Date.now }
+})
+
 const user = new Schema({
   username: String,
   password: String,
