@@ -12,6 +12,7 @@ adminRouter.get("/home/users/",                 isAuthenticated, AdminController
 adminRouter.get("/users/user/delete/:id",       isAuthenticated, AdminController.deleteUser);
 adminRouter.post("/users/user/update/",         isAuthenticated, AdminController.updateUserPost);
 adminRouter.get("/users/user/update/:id",       isAuthenticated, AdminController.updateUserPage);
+adminRouter.get("/users/user/search/",          isAuthenticated, AdminController.searchUser);
 
 adminRouter.get("/recipe/update/:id",           isAuthenticated, AdminController.updatePage);
 adminRouter.post("/recipe/update/",             isAuthenticated, AdminController.updateRecipePost);
