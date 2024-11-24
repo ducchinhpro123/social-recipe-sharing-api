@@ -21,6 +21,23 @@ class AdminController {
     }
   }
 
+  static async searchUser(req, res) {
+    const { q } = req.query;
+    if (!q) {
+      return res.render('users', {'message': 'Parameter q is required.', 'users': []});
+    }
+    try {
+      const users = await User.find({username: q});
+      if (users) {
+        return res.render('users', {'users': users});
+      }
+      return res.render("users", {'message': 'No user found', 'users': []});
+    } catch (error) {
+      console.error('Error searching users:', error);
+      res.render('error', {'message': error});
+    }
+  }
+
   static async searchRecipes(req, res) {
     const { q } = req.query;
 
