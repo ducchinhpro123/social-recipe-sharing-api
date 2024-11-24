@@ -4,6 +4,7 @@ class RecipeController {
   /**
    *  All the functions that ends with admin are supposed use for admin-only
    * */
+
   static async getRecipeByIdAdmin(id) {
     try {
       const recipe = await Recipe.findById(id);

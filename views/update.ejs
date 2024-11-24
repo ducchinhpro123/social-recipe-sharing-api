@@ -16,7 +16,7 @@
     <%- include ('comp/left_nav') %>
     <div class="d-flex flex-column" id="content-wrapper">
         <div id="content">
-            <%- include ('comp/top_nav') %>
+            <%- include('comp/top_nav', { action: '/admin/recipes/search/' }) %>
             <div class="container-fluid">
                 <div class="container mt-5">
                     <h1 class="mb-4">Update Recipe</h1>

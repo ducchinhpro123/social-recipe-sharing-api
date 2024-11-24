@@ -15,7 +15,7 @@
         <%- include ('comp/left_nav') %>
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
-                <%- include ('comp/top_nav') %>
+                <%- include('comp/top_nav', { action: '/admin/users/user/search/' }) %>
                 <div class="container p-3">
                     <form method="POST" id="update-form" action="/admin/recipe/add-new-recipe">
                         <!-- Title -->
