@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recipe Sharing Platform</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/recipes">All Recipes</a>
+                <% if (user) { %>
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                <% } %>
+            </nav>
+        </header>
+        
+        <main class="recipe-detail">
+            <div class="recipe-header">
+                <h1><%= recipe.title %></h1>
+                <div class="recipe-meta">
+                    <span class="prep-time">Prep Time: <%= recipe.prepTime %> minutes</span>
+                    <span class="cook-time">Cook Time: <%= recipe.cookTime %> minutes</span>
+                    <span class="total-time">Total Time: <%= recipe.prepTime + recipe.cookTime %> minutes</span>
+                    <span class="difficulty">Difficulty: <%= recipe.difficulty %></span>
+                </div>
+                <div class="recipe-categories">
+                    <% recipe.category.forEach(cat => { %>
+                        <span class="category-tag"><%= cat %></span>
+                    <% }) %>
+                </div>
+            </div>
+            
+            <div class="recipe-content-wrapper">
+                <div class="recipe-main-content">
+                    <div class="recipe-image-large">
+                        <img src="/images/<%= recipe.images[0] || 'default-recipe.jpg' %>" alt="<%= recipe.title %>">
+                    </div>
+                    
+                    <div class="recipe-description">
+                        <h2>Description</h2>
+                        <p><%= recipe.description %></p>
+                    </div>
+                    
+                    <div class="recipe-instructions">
+                        <h2>Instructions</h2>
+                        <ol>
+                            <% recipe.instructions.forEach((instruction, index) => { %>
+                                <li>
+                                    <div class="instruction-step">
+                                        <span class="step-number"><%= index + 1 %></span>
+                                        <p><%= instruction %></p>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="recipe-sidebar">
+                    <div class="recipe-ingredients">
+                        <h2>Ingredients</h2>
+                        <ul>
+                            <% recipe.ingredients.forEach(ingredient => { %>
+                                <li><%= ingredient.amount %> <%= ingredient.unit %> <%= ingredient.name %></li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                    
+                    <% if (user) { %>
+                        <div class="recipe-actions">
+                            <button class="btn-action save-recipe" data-id="<%= recipe._id %>" data-username="<%= user.username %>">Save to Favorites</button>
+                            <% if (user.id.toString() === recipe.userId.toString()) { %>
+                                <a href="/recipes/edit/<%= recipe._id %>" class="btn-secondary">Edit Recipe</a>
+                            <% } %>
+                        </div>
+                    <% } else { %>
+                        <div class="login-prompt">
+                            <p>Log in to save this recipe to your favorites!</p>
+                            <a href="/login" class="btn-secondary">Login</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> Recipe Sharing Platform. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <% if (user) { %>
+        <script src="/js/recipe-detail.js"></script>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recipe Sharing Platform</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/recipes">All Recipes</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="page-header">
+                <h1>My Favorite Recipes</h1>
+            </section>
+            
+            <section class="recipe-gallery">
+                <% if (recipes && recipes.length > 0) { %>
+                    <div class="recipe-grid">
+                        <% recipes.forEach(recipe => { %>
+                            <div class="recipe-card">
+                                <div class="recipe-image">
+                                    <img src="/images/<%= recipe.images[0] || 'default-recipe.jpg' %>" alt="<%= recipe.title %>">
+                                </div>
+                                <div class="recipe-content">
+                                    <h4><%= recipe.title %></h4>
+                                    <p><%= recipe.description.substring(0, 100) %>...</p>
+                                    <div class="recipe-meta">
+                                        <% if(recipe.prepTime) { %>
+                                            <span class="prep-time">Prep: <%= recipe.prepTime %> min</span>
+                                        <% } %>
+                                        <% if(recipe.cookTime) { %>
+                                            <span class="cook-time">Cook: <%= recipe.cookTime %> min</span>
+                                        <% } %>
+                                        <% if(recipe.difficulty) { %>
+                                            <span class="difficulty"><%= recipe.difficulty %></span>
+                                        <% } %>
+                                    </div>
+                                    <div class="recipe-actions">
+                                        <a href="/recipes/<%= recipe._id %>" class="btn-small">View Recipe</a>
+                                        <button class="btn-small remove-favorite" data-id="<%= recipe._id %>">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="no-recipes">
+                        <p>You haven't added any favorites yet.</p>
+                        <a href="/recipes" class="btn-primary">Browse Recipes</a>
+                    </div>
+                <% } %>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> Recipe Sharing Platform. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Handle removing favorites
+        const removeBtns = document.querySelectorAll('.remove-favorite');
+        removeBtns.forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const recipeId = this.getAttribute('data-id');
+                try {
+                    const response = await fetch('/api/users/favorites', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: '<%= user.username %>',
+                            recipeId: recipeId
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        // Remove the recipe card from the page
+                        this.closest('.recipe-card').remove();
+                        
+                        // If no recipes left, show "no recipes" message
+                        if (document.querySelectorAll('.recipe-card').length === 0) {
+                            const gallery = document.querySelector('.recipe-gallery');
+                            gallery.innerHTML = `
+                                <div class="no-recipes">
+                                    <p>You haven't added any favorites yet.</p>
+                                    <a href="/recipes" class="btn-primary">Browse Recipes</a>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        console.error('Failed to remove favorite');
+                    }
+                } catch (error) {
+                    console.error('Error removing favorite:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "Api for social recipe sharing",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "node app.js",
+    "dev": "nodemon app.js",
+    "seed": "node seed/seedData.js",
+    "download-images": "node scripts/download-images.js",
+    "setup": "npm run download-images && npm run seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Vo Duc Chinh",

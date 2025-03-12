@@ -1,72 +1,12 @@
-import { User }             from "../model/models.js";
-import { Recipe }           from "../model/models.js";
-import RecipeController     from "../controller/recipeController.js";
+import User from '../models/User.js';
+import { Recipe } from "../model/models.js";
+import RecipeController from "../controller/recipeController.js";
 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-
-class UserController {
-  static async getFavoritesLength(req, res) {
-    const {username} = req.body;
-    const userExists = await User.findOne({username});
-    if (userExists) {
-      const favoritesListNums = userExists.favorites.length;
-      return res.status(200).json({favoritesNums: favoritesListNums});
-    } else {
-      return res.status(404).json({message: "User not found"});
-    }
-  }
-  static async isContainsRecipe(req, res) {
-    const { username, recipeId } = req.body;
-    try {
-      const user = await User.findOne({username});
-      if (user) {
-        if (user.favorites.includes(recipeId)) {
-          return res.status(200).json({message: "Recipe found in favorite"});
-        } else {
-          return res.status(200).json({message: "Recipe not found in favorite"});
-        }
-      } else {
-        return res.status(404).json({message: "User not found"});
-      }
-    } catch (error) {
-      res.status(500).json({mesasge: error});
-    }
-  }
-
-  static async saveFavorites(req, res) {
-    // favorites: [{ type: Schema.Types.ObjectId, ref: 'Recipe'}],
-    const { username, recipeId } = req.body;
-    try {
-      const recipe = await Recipe.findById(recipeId);
-      const user = await User.findOne({username});
-
-      if (recipe && user) {
-        const isFavorite = user.favorites.includes(recipeId);
-        if (isFavorite) {
-          user.favorites.pull(recipeId);
-          await user.save();
-          return res.status(200).json({message: "You pulled a recipe from your favorites recipe list."});
-        } else {
-          user.favorites.push(recipeId);
-          await user.save();
-          return res.status(200).json({message: "You added a new recipe to your favorites recipe list."});
-        }
-      } else {
-        return res.status(404).json({message: "You missed recipe id or username"});
-      }
-    } catch (error) {
-      res.status(500).json({message: "There something be wrong ", error});
-    }
-  }
-
-  static async getAllUsers(_req, res) {
-    const users = await User.find();
-    res.status(200).json(users);
-  }
-
-  static async login(req, res) {
+const UserController = {
+  login: async (req, res) => {
     try {
       const { username, password } = req.body;
 
@@ -89,50 +29,35 @@ class UserController {
     } catch (error) {
       res.status(500).json({ message: "Error while logging", error });
     }
-  }
+  },
 
-  static async favorites(req, res) {
-      const {username} = req.body;
-      const userExists = await User.findOne({username});
-      if (userExists) {
-        const favoritesListNums = userExists.favorites.length;
-        let recipes = [];
-        if (favoritesListNums > 0) {
-          for (let recipeId of userExists.favorites) {
-             let recipe = await RecipeController.getRecipeByIdWithoutReq(recipeId);
-             if (recipe != null) {
-               recipes.push(recipe);
-             }
-          }
-        }
-        return res.status(200).json({favoritesNums: favoritesListNums, recipes: recipes});
-      } else {
-        return res.status(404).json({message: "User not found"});
-      }
-  }
-
-  static async register(req, res) {
+  register: async (req, res) => {
     try {
-      const { username, password } = req.body;
-      const userExists = await User.findOne({username});
+      const { username, email, password } = req.body;
 
-      if (userExists) {
-        return res.status(409).json({message: "User with username " + username + " already exists."});
+      // Check if user already exists
+      const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+      if (existingUser) {
+        return res.status(400).json({ message: 'Username or email already in use' });
       }
-      const encryptedPass = await bcrypt.hash(password, 10);
 
-      const newUser = new User({ username, password: encryptedPass, profileImage: "" });
-      await newUser.save();
+      // Create new user
+      const user = new User({
+        username,
+        email,
+        password
+      });
 
-      return res.status(201).json({ message: "User registered successfully", user: newUser });
+      await user.save();
+
+      return res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ message: "Error while registering new user", error });
+      console.error('Registration error:', error);
+      return res.status(500).json({ message: 'Registration failed. Please try again.' });
     }
-  }
+  },
 
-  static async findUserById(req, res) {
+  findUserById: async (req, res) => {
     const id = req.params.id;
     try {
       const user = await User.findById(id);
@@ -144,7 +69,86 @@ class UserController {
     } catch (error) {
       console.log("Error finding user: ", error);
     }
+  },
+
+  getAllUsers: async (_req, res) => {
+    const users = await User.find();
+    res.status(200).json(users);
+  },
+
+  saveFavorites: async (req, res) => {
+    const { username, recipeId } = req.body;
+    try {
+      const recipe = await Recipe.findById(recipeId);
+      const user = await User.findOne({username});
+
+      if (recipe && user) {
+        const isFavorite = user.favorites.includes(recipeId);
+        if (isFavorite) {
+          user.favorites.pull(recipeId);
+          await user.save();
+          return res.status(200).json({message: "You pulled a recipe from your favorites recipe list."});
+        } else {
+          user.favorites.push(recipeId);
+          await user.save();
+          return res.status(200).json({message: "You added a new recipe to your favorites recipe list."});
+        }
+      } else {
+        return res.status(404).json({message: "You missed recipe id or username"});
+      }
+    } catch (error) {
+      res.status(500).json({message: "There something be wrong ", error});
+    }
+  },
+
+  isContainsRecipe: async (req, res) => {
+    const { username, recipeId } = req.body;
+    try {
+      const user = await User.findOne({username});
+      if (user) {
+        if (user.favorites.includes(recipeId)) {
+          return res.status(200).json({message: "Recipe found in favorite"});
+        } else {
+          return res.status(200).json({message: "Recipe not found in favorite"});
+        }
+      } else {
+        return res.status(404).json({message: "User not found"});
+      }
+    } catch (error) {
+      res.status(500).json({mesasge: error});
+    }
+  },
+
+  favorites: async (req, res) => {
+    const {username} = req.body;
+    const userExists = await User.findOne({username});
+    if (userExists) {
+      const favoritesListNums = userExists.favorites.length;
+      let recipes = [];
+      if (favoritesListNums > 0) {
+        for (let recipeId of userExists.favorites) {
+          let recipe = await RecipeController.getRecipeByIdWithoutReq(recipeId);
+          if (recipe != null) {
+            recipes.push(recipe);
+          }
+        }
+      }
+      return res.status(200).json({favoritesNums: favoritesListNums, recipes: recipes});
+    } else {
+      return res.status(404).json({message: "User not found"});
+    }
+  },
+
+  getFavoritesLength: async (req, res) => {
+    const {username} = req.body;
+    const userExists = await User.findOne({username});
+    if (userExists) {
+      const favoritesListNums = userExists.favorites.length;
+      return res.status(200).json({favoritesNums: favoritesListNums});
+    } else {
+      return res.status(404).json({message: "User not found"});
+    }
   }
-}
+};
 
 export default UserController;

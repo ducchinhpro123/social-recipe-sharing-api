@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recipe Sharing Platform</h1>
+            <nav>
+                <a href="/">Home</a>
+                <% if (user) { %>
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                <% } %>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="page-header">
+                <h1>All Recipes</h1>
+                <% if (user) { %>
+                    <a href="/recipes/new" class="btn-primary">Create New Recipe</a>
+                <% } %>
+            </section>
+            
+            <section class="filters">
+                <form class="filter-form">
+                    <div class="filter-group">
+                        <label for="category">Category</label>
+                        <select name="category" id="category">
+                            <option value="">All Categories</option>
+                            <option value="Dessert">Dessert</option>
+                            <option value="Main Course">Main Course</option>
+                            <option value="Side Dish">Side Dish</option>
+                            <option value="Appetizer">Appetizer</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                            <option value="Snack">Snack</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="difficulty">Difficulty</label>
+                        <select name="difficulty" id="difficulty">
+                            <option value="">All Difficulties</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="time">Max Time (min)</label>
+                        <input type="number" name="time" id="time" min="0" max="300" placeholder="Any">
+                    </div>
+                    <button type="submit" class="btn-secondary">Filter</button>
+                </form>
+            </section>
+            
+            <section class="recipe-gallery">
+                <% if (recipes && recipes.length > 0) { %>
+                    <div class="recipe-grid">
+                        <% recipes.forEach(recipe => { %>
+                            <div class="recipe-card">
+                                <div class="recipe-image">
+                                    <img src="/images/<%= recipe.images[0] || 'default-recipe.jpg' %>" alt="<%= recipe.title %>">
+                                </div>
+                                <div class="recipe-content">
+                                    <h4><%= recipe.title %></h4>
+                                    <p><%= recipe.description.substring(0, 100) %>...</p>
+                                    <div class="recipe-meta">
+                                        <% if(recipe.prepTime) { %>
+                                            <span class="prep-time">Prep: <%= recipe.prepTime %> min</span>
+                                        <% } %>
+                                        <% if(recipe.cookTime) { %>
+                                            <span class="cook-time">Cook: <%= recipe.cookTime %> min</span>
+                                        <% } %>
+                                        <% if(recipe.difficulty) { %>
+                                            <span class="difficulty"><%= recipe.difficulty %></span>
+                                        <% } %>
+                                    </div>
+                                    <a href="/recipes/<%= recipe._id %>" class="btn-small">View Recipe</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="no-recipes">
+                        <p>No recipes found.</p>
+                        <% if (user) { %>
+                            <a href="/recipes/new" class="btn-primary">Create the First Recipe</a>
+                        <% } %>
+                    </div>
+                <% } %>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> Recipe Sharing Platform. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

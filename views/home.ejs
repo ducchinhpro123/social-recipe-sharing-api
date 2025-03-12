@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recipe Sharing Platform</h1>
+            <nav>
+                <a href="/recipes">Browse Recipes</a>
+                <% if (user) { %>
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                <% } %>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="hero">
+                <h2>Share Your Favorite Recipes</h2>
+                <p>Join our community of food lovers and share your culinary creations!</p>
+                
+                <% if (!user) { %>
+                    <div class="cta-buttons">
+                        <a href="/register" class="btn-primary">Sign Up Now</a>
+                        <a href="/login" class="btn-secondary">Log In</a>
+                    </div>
+                <% } else { %>
+                    <div class="cta-buttons">
+                        <a href="/dashboard" class="btn-primary">View Your Dashboard</a>
+                        <a href="/recipes/new" class="btn-secondary">Create Recipe</a>
+                    </div>
+                <% } %>
+            </section>
+            
+            <section class="features">
+                <div class="feature">
+                    <h3>Share Recipes</h3>
+                    <p>Upload your own recipes with photos and detailed instructions.</p>
+                </div>
+                <div class="feature">
+                    <h3>Discover New Dishes</h3>
+                    <p>Browse recipes from other users and find your next favorite meal.</p>
+                </div>
+                <div class="feature">
+                    <h3>Save Favorites</h3>
+                    <p>Keep track of recipes you love for easy access later.</p>
+                </div>
+            </section>
+            
+            <section class="featured-recipes">
+                <h2>Featured Recipes</h2>
+                <div class="recipe-cards">
+                    <% if (featuredRecipes && featuredRecipes.length > 0) { %>
+                        <% featuredRecipes.forEach(recipe => { %>
+                            <div class="recipe-card">
+                                <div class="recipe-image">
+                                    <img src="/images/<%= recipe.images[0] || 'default-recipe.jpg' %>" alt="<%= recipe.title %>">
+                                </div>
+                                <div class="recipe-content">
+                                    <h4><%= recipe.title %></h4>
+                                    <p><%= recipe.description.substring(0, 100) %>...</p>
+                                    <div class="recipe-meta">
+                                        <span class="prep-time">Prep: <%= recipe.prepTime %> min</span>
+                                        <span class="cook-time">Cook: <%= recipe.cookTime %> min</span>
+                                        <span class="difficulty"><%= recipe.difficulty %></span>
+                                    </div>
+                                    <a href="/recipes/<%= recipe._id %>" class="btn-small">View Recipe</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p>No featured recipes yet.</p>
+                    <% } %>
+                </div>
+                <div class="view-all">
+                    <a href="/recipes" class="btn-secondary">View All Recipes</a>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> Recipe Sharing Platform. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

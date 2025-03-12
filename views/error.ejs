@@ -1,26 +1,41 @@
-<html data-bs-theme="light" lang="en">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-    <title>Untitled</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-
 <body>
-<div class="container w-100 h-100" style="width: 100%;height: 100%;">
-    <div class="col">
-        <div class="row">
-            <div class="col" style="text-align: center;"><img src="/assets/img/avatars/sadpanda_vector.svg" style="width: 400px;text-align: center;" /></div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <h1 style="text-align: center;color: #c2c2c2;font-family: fira code;">IT&#39;S NOT YOU<br />IT&#39;S ME</h1>
-                <p class="lead shadow-none" style="text-align: center;color: rgb(194,194,194);font-family: fira code;font-size: 13px;margin: 34px;">Something went terribly wrong...<br />Try and reload the page, that usually does the trick.</p>
-                <p class="lead shadow-none" style="text-align: center;color: rgb(194,194,194);font-family: fira code;font-size: 13px;margin: 34px;"><%= message %></p>
+    <div class="container">
+        <header>
+            <h1>Recipe Sharing Platform</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/recipes">All Recipes</a>
+                <% if (user) { %>
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                <% } %>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="error-container">
+                <div class="error-icon">!</div>
+                <h1><%= title %></h1>
+                <p><%= message %></p>
+                <a href="javascript:history.back()" class="btn-secondary">Go Back</a>
+                <a href="/" class="btn-primary">Go to Homepage</a>
             </div>
-        </div>
+        </main>
+        
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> Recipe Sharing Platform. All rights reserved.</p>
+        </footer>
     </div>
-</div>
 </body>
-
 </html>

@@ -1,27 +1,12 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
+import User from "../models/User.js"; // Import the existing User model instead of redefining it
 
-const admin = new Schema({
-  username: String,
-  password: String,
-  profileImage: String,
-  bio: String,
-  createdAt: { type: Date, default: Date.now }
-})
+// Export the User model so it can be used elsewhere
+export { User };
 
-const user = new Schema({
-  username: String,
-  password: String,
-  profileImage: String,
-  bio: String,
-  favorites: [{ type: Schema.Types.ObjectId, ref: 'Recipe'}],
-  createdAt: { type: Date, default: Date.now }
-  //followers: [ObjectId],
-  //following: [ObjectId],
-  //savedRecipes: [ObjectId],
-});
-
-const recipe = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'user' },
+// Define the Recipe schema and model
+const recipeSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
   title: String,
   description: String,
   instructions: [String],
@@ -38,6 +23,8 @@ const recipe = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-export const User = mongoose.model('User', user);
-export const Recipe = mongoose.model('Recipe', recipe);
+export const Recipe = mongoose.model("Recipe", recipeSchema);
+
+// Define any other schemas and models as needed
+// ...existing code...
 

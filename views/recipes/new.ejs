@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Recipe</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recipe Sharing Platform</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/recipes">All Recipes</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="page-header">
+                <h1>Create New Recipe</h1>
+            </section>
+            
+            <section class="create-recipe-form">
+                <form action="/recipes/new" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="title">Recipe Title*</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description*</label>
+                        <textarea id="description" name="description" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="prepTime">Prep Time (minutes)*</label>
+                            <input type="number" id="prepTime" name="prepTime" min="0" required>
+                        </div>
+                        
+                        <div class="form-group half">
+                            <label for="cookTime">Cook Time (minutes)*</label>
+                            <input type="number" id="cookTime" name="cookTime" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="difficulty">Difficulty*</label>
+                            <select id="difficulty" name="difficulty" required>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group half">
+                            <label for="category">Category*</label>
+                            <select id="category" name="category" multiple required>
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Dessert">Dessert</option>
+                                <option value="Appetizer">Appetizer</option>
+                                <option value="Side Dish">Side Dish</option>
+                                <option value="Main Course">Main Course</option>
+                                <option value="Baking">Baking</option>
+                                <option value="Vegetarian">Vegetarian</option>
+                                <option value="Vegan">Vegan</option>
+                                <option value="Gluten-Free">Gluten-Free</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Mexican">Mexican</option>
+                                <option value="Asian">Asian</option>
+                            </select>
+                            <small>Hold Ctrl/Cmd to select multiple</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ingredients*</label>
+                        <div id="ingredients-container">
+                            <div class="ingredient-row">
+                                <input type="text" name="ingredientName[]" placeholder="Ingredient name" required>
+                                <input type="number" name="ingredientAmount[]" placeholder="Amount" step="0.01" min="0" required>
+                                <input type="text" name="ingredientUnit[]" placeholder="Unit (g, cup, etc)" required>
+                                <button type="button" class="btn-small remove-ingredient">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-ingredient" class="btn-secondary">Add Ingredient</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Instructions*</label>
+                        <div id="instructions-container">
+                            <div class="instruction-row">
+                                <textarea name="instructions[]" rows="2" placeholder="Step 1" required></textarea>
+                                <button type="button" class="btn-small remove-instruction">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-instruction" class="btn-secondary">Add Instruction</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Recipe Image</label>
+                        <input type="file" id="image" name="image" accept="image/*">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Create Recipe</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> Recipe Sharing Platform. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Add ingredient row
+        document.getElementById('add-ingredient').addEventListener('click', function() {
+            const container = document.getElementById('ingredients-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'ingredient-row';
+            newRow.innerHTML = `
+                <input type="text" name="ingredientName[]" placeholder="Ingredient name" required>
+                <input type="number" name="ingredientAmount[]" placeholder="Amount" step="0.01" min="0" required>
+                <input type="text" name="ingredientUnit[]" placeholder="Unit (g, cup, etc)" required>
+                <button type="button" class="btn-small remove-ingredient">Remove</button>
+            `;
+            container.appendChild(newRow);
+        });
+
+        // Remove ingredient row
+        document.getElementById('ingredients-container').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-ingredient')) {
+                if (document.querySelectorAll('.ingredient-row').length > 1) {
+                    e.target.parentElement.remove();
+                }
+            }
+        });
+
+        // Add instruction row
+        document.getElementById('add-instruction').addEventListener('click', function() {
+            const container = document.getElementById('instructions-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'instruction-row';
+            const stepNumber = container.children.length + 1;
+            newRow.innerHTML = `
+                <textarea name="instructions[]" rows="2" placeholder="Step ${stepNumber}" required></textarea>
+                <button type="button" class="btn-small remove-instruction">Remove</button>
+            `;
+            container.appendChild(newRow);
+        });
+
+        // Remove instruction row
+        document.getElementById('instructions-container').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-instruction')) {
+                if (document.querySelectorAll('.instruction-row').length > 1) {
+                    e.target.parentElement.remove();
+                    
+                    // Update step numbers
+                    const steps = document.querySelectorAll('#instructions-container textarea');
+                    steps.forEach((step, index) => {
+                        step.placeholder = `Step ${index + 1}`;
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recipe Sharing Platform</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/recipes">All Recipes</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="page-header">
+                <h1>My Recipes</h1>
+                <a href="/recipes/new" class="btn-primary">Create New Recipe</a>
+            </section>
+            
+            <section class="recipe-gallery">
+                <% if (recipes && recipes.length > 0) { %>
+                    <div class="recipe-grid">
+                        <% recipes.forEach(recipe => { %>
+                            <div class="recipe-card">
+                                <div class="recipe-image">
+                                    <img src="/images/<%= recipe.images[0] || 'default-recipe.jpg' %>" alt="<%= recipe.title %>">
+                                </div>
+                                <div class="recipe-content">
+                                    <h4><%= recipe.title %></h4>
+                                    <p><%= recipe.description.substring(0, 100) %>...</p>
+                                    <div class="recipe-meta">
+                                        <% if(recipe.prepTime) { %>
+                                            <span class="prep-time">Prep: <%= recipe.prepTime %> min</span>
+                                        <% } %>
+                                        <% if(recipe.cookTime) { %>
+                                            <span class="cook-time">Cook: <%= recipe.cookTime %> min</span>
+                                        <% } %>
+                                        <% if(recipe.difficulty) { %>
+                                            <span class="difficulty"><%= recipe.difficulty %></span>
+                                        <% } %>
+                                    </div>
+                                    <div class="recipe-actions">
+                                        <a href="/recipes/<%= recipe._id %>" class="btn-small">View</a>
+                                        <a href="/recipes/edit/<%= recipe._id %>" class="btn-small edit-recipe">Edit</a>
+                                        <button class="btn-small delete-recipe" data-id="<%= recipe._id %>">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="no-recipes">
+                        <p>You haven't created any recipes yet.</p>
+                        <a href="/recipes/new" class="btn-primary">Create Your First Recipe</a>
+                    </div>
+                <% } %>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> Recipe Sharing Platform. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Handle deleting recipes
+        const deleteBtns = document.querySelectorAll('.delete-recipe');
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', async function() {
+                if (confirm('Are you sure you want to delete this recipe? This action cannot be undone.')) {
+                    const recipeId = this.getAttribute('data-id');
+                    try {
+                        const response = await fetch(`/api/recipes/delete/${recipeId}`, {
+                            method: 'GET'
+                        });
+                        
+                        if (response.ok) {
+                            // Remove the recipe card from the page
+                            this.closest('.recipe-card').remove();
+                            
+                            // If no recipes left, show "no recipes" message
+                            if (document.querySelectorAll('.recipe-card').length === 0) {
+                                const gallery = document.querySelector('.recipe-gallery');
+                                gallery.innerHTML = `
+                                    <div class="no-recipes">
+                                        <p>You haven't created any recipes yet.</p>
+                                        <a href="/recipes/new" class="btn-primary">Create Your First Recipe</a>
+                                    </div>
+                                `;
+                            }
+                        } else {
+                            console.error('Failed to delete recipe');
+                        }
+                    } catch (error) {
+                        console.error('Error deleting recipe:', error);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

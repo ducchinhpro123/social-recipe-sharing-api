@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/recipes">All Recipes</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </header>
+        
+        <main>
+            <section class="welcome">
+                <h2>Welcome, <%= user.username %>!</h2>
+                <p>This is your personal dashboard where you can manage your recipes and account.</p>
+            </section>
+            
+            <section class="dashboard-actions">
+                <h3>Quick Actions</h3>
+                <div class="action-buttons">
+                    <a href="/recipes/new" class="btn-action">Create New Recipe</a>
+                    <a href="/recipes/my" class="btn-action">View My Recipes</a>
+                    <a href="/recipes/favorites" class="btn-action">View Favorite Recipes</a>
+                </div>
+            </section>
+            
+            <section class="dashboard-section">
+                <h3>Your Recipes</h3>
+                <div class="recipe-cards">
+                    <% if (userRecipes && userRecipes.length > 0) { %>
+                        <% userRecipes.forEach(recipe => { %>
+                            <div class="recipe-card">
+                                <div class="recipe-image">
+                                    <img src="/images/<%= recipe.images[0] || 'default-recipe.jpg' %>" alt="<%= recipe.title %>">
+                                </div>
+                                <div class="recipe-content">
+                                    <h4><%= recipe.title %></h4>
+                                    <p><%= recipe.description.substring(0, 80) %>...</p>
+                                    <a href="/recipes/<%= recipe._id %>" class="btn-small">View Recipe</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p>You haven't created any recipes yet.</p>
+                        <a href="/recipes/new" class="btn-action">Create Your First Recipe</a>
+                    <% } %>
+                </div>
+            </section>
+            
+            <section class="dashboard-section">
+                <h3>Your Favorite Recipes</h3>
+                <div class="recipe-cards">
+                    <% if (favoriteRecipes && favoriteRecipes.length > 0) { %>
+                        <% favoriteRecipes.forEach(recipe => { %>
+                            <div class="recipe-card">
+                                <div class="recipe-image">
+                                    <img src="/images/<%= recipe.images[0] || 'default-recipe.jpg' %>" alt="<%= recipe.title %>">
+                                </div>
+                                <div class="recipe-content">
+                                    <h4><%= recipe.title %></h4>
+                                    <p><%= recipe.description.substring(0, 80) %>...</p>
+                                    <a href="/recipes/<%= recipe._id %>" class="btn-small">View Recipe</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p>You haven't added any favorites yet.</p>
+                        <a href="/recipes" class="btn-action">Browse Recipes</a>
+                    <% } %>
+                </div>
+            </section>
+            
+            <section class="dashboard-section">
+                <h3>Browse Recipes</h3>
+                <div class="recipe-cards">
+                    <% if (allRecipes && allRecipes.length > 0) { %>
+                        <% allRecipes.forEach(recipe => { %>
+                            <div class="recipe-card">
+                                <div class="recipe-image">
+                                    <img src="/images/<%= recipe.images[0] || 'default-recipe.jpg' %>" alt="<%= recipe.title %>">
+                                </div>
+                                <div class="recipe-content">
+                                    <h4><%= recipe.title %></h4>
+                                    <p><%= recipe.description.substring(0, 80) %>...</p>
+                                    <a href="/recipes/<%= recipe._id %>" class="btn-small">View Recipe</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p>No recipes found.</p>
+                    <% } %>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> Recipe Sharing Platform. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
