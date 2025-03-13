@@ -7,17 +7,31 @@ export { User };
 // Define the Recipe schema and model
 const recipeSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
-  title: String,
-  description: String,
+  title: { type: String, required: true },
+  description: { type: String, required: true },
   instructions: [String],
   images: [String],
-  prepTime: Number,
-  cookTime: Number,
-  difficulty: String,
+  prepTime: { 
+    type: Number, 
+    required: true,
+    min: 0,
+    default: 0 
+  },
+  cookTime: { 
+    type: Number, 
+    required: true,
+    min: 0,
+    default: 0 
+  },
+  difficulty: { 
+    type: String, 
+    required: true,
+    enum: ['Easy', 'Medium', 'Hard'] 
+  },
   ingredients: [{
-    name: String,
-    amount: Number,
-    unit: String
+    name: { type: String, required: true },
+    amount: { type: Number, required: true, min: 0 },
+    unit: { type: String, required: true }
   }],
   category: [String],
   createdAt: { type: Date, default: Date.now }

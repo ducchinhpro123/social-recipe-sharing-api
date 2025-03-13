@@ -91,36 +91,99 @@ router.get('/recipes/new', isAuthenticated, (req, res) => {
 
 router.post('/recipes/new', isAuthenticated, async (req, res) => {
   try {
+    console.log("Full request body:", req.body);
+    
     const { 
       title, description, prepTime, cookTime, difficulty, category,
       ingredientName, ingredientAmount, ingredientUnit, instructions
     } = req.body;
+    
+    // Debug logging
+    console.log("title:", title);
+    console.log("description:", description);
+    console.log("prepTime (raw):", prepTime);
+    console.log("cookTime (raw):", cookTime);
+    console.log("difficulty:", difficulty);
+    console.log("category:", category);
+    
+    // Set default values if fields are undefined
+    const prepTimeValue = prepTime !== undefined ? prepTime : "0";
+    const cookTimeValue = cookTime !== undefined ? cookTime : "0";
+    
+    console.log("prepTimeValue:", prepTimeValue);
+    console.log("cookTimeValue:", cookTimeValue);
+    
+    // Ensure values are properly converted to numbers with fallbacks
+    const prepTimeNum = prepTimeValue === '' ? 0 : Number(prepTimeValue);
+    const cookTimeNum = cookTimeValue === '' ? 0 : Number(cookTimeValue);
+    
+    console.log("prepTimeNum:", prepTimeNum);
+    console.log("cookTimeNum:", cookTimeNum);
+    
+    // Explicit validation with better error messages
+    if (isNaN(prepTimeNum)) {
+      console.error(`Invalid prepTime: '${prepTime}', type: ${typeof prepTime}`);
+      return res.status(400).render('error', {
+        title: 'Invalid Input',
+        message: `Prep time must be a valid number. Received: ${prepTime} (${typeof prepTime})`,
+        user: req.session.user
+      });
+    }
+    
+    if (isNaN(cookTimeNum)) {
+      console.error(`Invalid cookTime: '${cookTime}', type: ${typeof cookTime}`);
+      return res.status(400).render('error', {
+        title: 'Invalid Input',
+        message: `Cook time must be a valid number. Received: ${cookTime} (${typeof cookTime})`,
+        user: req.session.user
+      });
+    }
 
-    // Process ingredients
+    // Process ingredients with better validation
     const ingredients = [];
     if (Array.isArray(ingredientName)) {
       for (let i = 0; i < ingredientName.length; i++) {
+        // Parse and validate amount
+        const amountValue = ingredientAmount[i] === '' ? 0 : Number(ingredientAmount[i]);
+        if (isNaN(amountValue)) {
+          return res.status(400).render('error', {
+            title: 'Invalid Input',
+            message: `Ingredient amount must be a valid number. Received: ${ingredientAmount[i]}`,
+            user: req.session.user
+          });
+        }
+        
         ingredients.push({
           name: ingredientName[i],
-          amount: parseFloat(ingredientAmount[i]),
+          amount: amountValue,
           unit: ingredientUnit[i]
         });
       }
     } else if (ingredientName) {
+      // Parse and validate single ingredient amount
+      const amountValue = ingredientAmount === '' ? 0 : Number(ingredientAmount);
+      if (isNaN(amountValue)) {
+        return res.status(400).render('error', {
+          title: 'Invalid Input',
+          message: `Ingredient amount must be a valid number. Received: ${ingredientAmount}`,
+          user: req.session.user
+        });
+      }
+      
       ingredients.push({
         name: ingredientName,
-        amount: parseFloat(ingredientAmount),
+        amount: amountValue,
         unit: ingredientUnit
       });
     }
 
-    // Create new recipe
+    // Create new recipe with validated data
     const recipe = new Recipe({
       userId: req.session.user.id,
       title,
       description,
-      prepTime: parseInt(prepTime),
-      cookTime: parseInt(cookTime),
+      prepTime: prepTimeNum,
+      cookTime: cookTimeNum,
       difficulty,
       category: Array.isArray(category) ? category : [category],
       ingredients,
@@ -136,7 +199,7 @@ router.post('/recipes/new', isAuthenticated, async (req, res) => {
     console.error('Error creating recipe:', error);
     res.status(500).render('error', {
       title: 'Error',
-      message: 'An error occurred while creating the recipe.',
+      message: 'An error occurred while creating the recipe: ' + error.message,
       user: req.session.user
     });
   }
@@ -225,8 +288,27 @@ router.get('/recipes/:id', async (req, res) => {
   }
 });
 
+// Add this route for debugging form submissions
+router.post('/test-form', (req, res) => {
+  console.log("Test Form - Full request body:", req.body);
+  console.log("Test Form - prepTime:", req.body.prepTime, typeof req.body.prepTime);
+  console.log("Test Form - cookTime:", req.body.cookTime, typeof req.body.cookTime);
+  
+  res.json({
+    received: {
+      prepTime: req.body.prepTime,
+      cookTime: req.body.cookTime
+    },
+    parsed: {
+      prepTime: Number(req.body.prepTime),
+      cookTime: Number(req.body.cookTime)
+    }
+  });
+});
+
 // API Routes for Authentication
 router.post("/api/auth/login", UserController.login);
+
 // Use the existing register function from authController for API as well
 router.post("/api/auth/register", (req, res) => {
   // Set headers to API response format

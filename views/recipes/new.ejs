@@ -38,12 +38,14 @@
                     <div class="form-row">
                         <div class="form-group half">
                             <label for="prepTime">Prep Time (minutes)*</label>
-                            <input type="number" id="prepTime" name="prepTime" min="0" required>
+                            <input type="number" id="prepTime" name="prepTime" min="0" step="1" value="0" required>
+                            <small>Must be a number, e.g., 30</small>
                         </div>
                         
                         <div class="form-group half">
                             <label for="cookTime">Cook Time (minutes)*</label>
-                            <input type="number" id="cookTime" name="cookTime" min="0" required>
+                            <input type="number" id="cookTime" name="cookTime" min="0" step="1" value="0" required>
+                            <small>Must be a number, e.g., 45</small>
                         </div>
                     </div>
 
@@ -121,6 +123,33 @@
     </div>
 
     <script>
+        // Form validation and normalization before submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            // Get form elements
+            const prepTimeInput = document.getElementById('prepTime');
+            const cookTimeInput = document.getElementById('cookTime');
+            
+            // Make sure they have values - fallback to 0 if empty or invalid
+            if (prepTimeInput.value.trim() === '' || isNaN(Number(prepTimeInput.value))) {
+                prepTimeInput.value = '0';
+            }
+            
+            if (cookTimeInput.value.trim() === '' || isNaN(Number(cookTimeInput.value))) {
+                cookTimeInput.value = '0';
+            }
+            
+            // Set a debug message in the console
+            console.log('Form submission - prepTime:', prepTimeInput.value, 'cookTime:', cookTimeInput.value);
+            
+            // Make sure all ingredient amounts have values
+            const amountInputs = document.querySelectorAll('input[name="ingredientAmount[]"]');
+            for (let input of amountInputs) {
+                if (input.value.trim() === '' || isNaN(Number(input.value))) {
+                    input.value = '0';
+                }
+            }
+        });
+
         // Add ingredient row
         document.getElementById('add-ingredient').addEventListener('click', function() {
             const container = document.getElementById('ingredients-container');

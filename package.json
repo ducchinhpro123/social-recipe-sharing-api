@@ -9,12 +9,14 @@
     "dev": "nodemon app.js",
     "seed": "node seed/seedData.js",
     "download-images": "node scripts/download-images.js",
-    "setup": "npm run download-images && npm run seed",
+    "ensure-dirs": "node scripts/ensure-directories.js",
+    "setup": "npm run ensure-dirs && npm run download-images && npm run seed",
+    "generate-recipes": "node scripts/generate-sample-recipes.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Vo Duc Chinh",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "connect-flash": "^0.1.1",
@@ -27,7 +29,9 @@
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.0",
     "mysql2": "^3.11.3",
-    "nodemon": "^3.1.7",
     "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
