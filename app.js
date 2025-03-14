@@ -45,7 +45,7 @@ app.use(cors());
 
 // or, for specific origins
 app.use(cors({
-  origin: 'http://localhost:5000' // Replace with your Flutter app's origin
+  origin: '*' // Replace with your Flutter app's origin
 }));
 
 // Improved static file serving configuration
