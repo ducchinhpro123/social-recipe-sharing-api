@@ -18,8 +18,8 @@ const UserController = {
 
       const isValidPass = await bcrypt.compare(password, user.password);
 
-      // if (user && isValidPass) {
-      if (true) {
+      if (user && isValidPass) {
+      // if (true) {
         const token = jwt.sign({id: user._id}, "159d86da542f791a23cca61d76ae243c0464fbb594212e2332fb5946b23a18fd",
           {expiresIn: "1h"});
 
