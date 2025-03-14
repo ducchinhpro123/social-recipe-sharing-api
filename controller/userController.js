@@ -19,22 +19,24 @@ const UserController = {
       const isValidPass = await bcrypt.compare(password, user.password);
 
       if (user && isValidPass) {
-        const token = jwt.sign({id: user._id}, "159d86da542f791a23cca61d76ae243c0464fbb594212e2332fb5946b23a18fd",
-          {expiresIn: "1h"});
+        // const token = jwt.sign({id: user._id}, "159d86da542f791a23cca61d76ae243c0464fbb594212e2332fb5946b23a18fd",
+        //   {expiresIn: "1h"});
 
         // return res.status(200).json({ message: "Login successful", token, user });
-        return {
-            statusCode: 200,
-            headers: {
-          "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-          "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
-          "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
-          "Access-Control-Allow-Methods": "POST, OPTIONS"
-            },
-            token,
-            user,
-            body: JSON.stringify(item)
-        };
+
+        res.redirect('/admin/home');
+        // return {
+        //     statusCode: 200,
+        //     headers: {
+        //   "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+        //   "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+        //   "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+        //   "Access-Control-Allow-Methods": "POST, OPTIONS"
+        //     },
+        //     token,
+        //     user,
+        //     body: JSON.stringify(item)
+        // };
 
       } else {
         return res.status(401).json({ message: "Invalid username or password" });
