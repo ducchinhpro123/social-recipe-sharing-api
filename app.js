@@ -2,6 +2,7 @@ import express           from 'express';
 import bodyParser        from 'body-parser';
 import path              from 'path';
 import { fileURLToPath } from 'url';
+import cors              from 'cors';
 
 // Import models first to ensure they are registered in the correct order
 import './models/User.js';  // First load the User model
@@ -38,6 +39,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.json());
+
+// Enable CORS for all origins
+app.use(cors());
+
+// or, for specific origins
+app.use(cors({
+  origin: 'http://localhost:5000' // Replace with your Flutter app's origin
+}));
 
 // Improved static file serving configuration
 // Make public directory and images directly accessible

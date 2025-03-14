@@ -137,6 +137,39 @@ social-recipe-sharing-api/
 - GET `/api/recipes/delete/:id` - Delete recipe by ID
 - POST `/api/recipes/update/` - Update recipe
 
+### Admin API Endpoint
+- POST `/api/admin/login` - Login admin user
+
+## Deployment on Vercel
+
+This application can be easily deployed on Vercel by following these steps:
+
+1. Push your code to a GitHub repository
+2. Create an account on [Vercel](https://vercel.com/)
+3. Click "New Project" and select your GitHub repository
+4. Configure the project:
+   - Framework preset: Other
+   - Root directory: ./
+   - Build Command: npm run setup
+   - Output directory: public
+   - Install Command: npm install
+5. Configure environment variables:
+   - Add your `MONGODB_URI`, `SESSION_SECRET`, and `JWT_SECRET` 
+6. Click "Deploy"
+
+### Making Your Deployment Public
+
+To ensure your deployment is publicly accessible:
+
+1. Go to your project dashboard on Vercel
+2. Click on "Settings" → "Authentication"
+3. Turn off "Require Authentication" 
+4. Under "Access" settings, select "Public"
+5. Click "Save"
+6. Redeploy your application
+
+Now anyone can access your application without needing to log in to Vercel or GitHub.
+
 ## Contributing
 
 1. Fork the repository

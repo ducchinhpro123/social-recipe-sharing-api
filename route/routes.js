@@ -1,6 +1,7 @@
-import express          from "express";
-import UserController   from "../controller/userController.js";
+import express from "express";
+import UserController from "../controller/userController.js";
 import RecipeController from "../controller/recipeController.js";
+import AdminController from "../controller/adminController.js"; // Import AdminController
 import { register, login, logout } from '../controllers/authController.js';
 import { isAuthenticated, isAdmin } from '../middleware/auth.js';
 import { Recipe } from "../model/models.js";
@@ -308,13 +309,14 @@ router.post('/test-form', (req, res) => {
 
 // API Routes for Authentication
 router.post("/api/auth/login", UserController.login);
-
-// Use the existing register function from authController for API as well
 router.post("/api/auth/register", (req, res) => {
   // Set headers to API response format
   req.headers.accept = 'application/json';
   register(req, res);
 });
+
+// Admin login route
+router.post("/api/admin/login", AdminController.login);
 
 /*      ------ User API routes ------       */
 router.get("/api/users/:id", UserController.findUserById);
